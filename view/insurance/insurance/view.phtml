@@ -1,0 +1,39 @@
+<?php
+$this->headLink()->appendStylesheet('/css/style.css');
+$this->inlineScript()->prependFile("https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=4448167e-6d23-4e82-8826-0171c3926fa2");
+$this->headTitle('Информация о страховке');
+?>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 shadow-lg p-3 mb-5 bg-white rounded" style="margin:0 auto;">
+            <h3 class="p-3 text-md-center">Информация о страховке</h3>
+            <div class="container">
+                <?php if ($this->identity()->role == $this->identity()::ADMIN_ROLE || $this->identity()->role == $this->identity()::CAR_EDITOR_ROLE || $this->identity()->role == $this->identity()::MECHANIC_ROLE) : ?>
+                    <div class="row mb-3">
+                        <div class="col-12 text-right">
+                            <a href="<?= $this->url('insurance/change', ['id' => $insurance->insurance_id]) ?>" class="btn btn-primary">
+                                <i class="fa fa-pencil"></i> Изменить
+                            </a>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                <div class="row">
+                    <div class="col-md-4">
+                        <?= $this->partial('partial/images.phtml', ['entity_name' => $insurance->getClassNameAbbreviation(), 'id' =>  $insurance->insurance_id, 'file_names' => $insurance->file_names, 'img_type' => 'view']); ?>
+                    </div>
+                    <div class="col-md-8">
+                        <p class="mb-0">Район: <b><?= $insurance->district_name; ?></b></p>
+                        <p class="mb-0">ТС: <b><?= $insurance->car_model . ' - ' . $insurance->state_number; ?></b></p>
+                        <p class="mb-0">Страховая компания: <b><?= $insurance->insurer_name; ?></b></p>
+                        <p class="mb-0">Дата начала действия: <b><?= empty($insurance->insurance_start_date) ? '' : date('d.m.y', strtotime($insurance->insurance_start_date)); ?></b></p>
+                        <p class="mb-0">Дата окончания действия: <b><?= empty($insurance->insurance_start_date) ? '' : date('d.m.y', strtotime($insurance->insurance_start_date)); ?></b></p>
+                        <p class="mb-0">Стоимость страховки: <b><?= $insurance->cost; ?>, руб.</b></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?= $this->partial('partial/icon_wheel.phtml'); ?>
+<?= $this->partial('partial/modal_img.phtml'); ?>
+<?= $this->partial('partial/confirm_modal_form.phtml'); ?>

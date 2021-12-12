@@ -1,0 +1,77 @@
+<?=
+$this->headLink()->prependStylesheet($this->basePath('css/chosen.min.css'));
+$this->inlineScript()->appendFile($this->basePath('js/chosen.jquery.min.js')); ?>
+
+<?php
+$title = empty($insurance->insurance_id)  ? 'Добавить страховку' : 'Изменить информацию о страховке';
+$this->headTitle($title);
+?>
+<style>
+    /* стиль для вывода списка ошибок */
+    ul {
+        color: #dc3545;
+        font-size: 80%;
+        font-weight: 400;
+    }
+
+    .chosen-container-single .chosen-single div {
+        top: 6px;
+        right: -2px;
+    }
+
+    .chosen-container {
+        font-size: 1rem;
+    }
+
+    .chosen-container-single .chosen-single {
+        display: block;
+        width: 100%;
+        height: calc(1.5em + 0.75rem + 2px);
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+</style>
+<div class="container">
+    <div class=" row justify-content-center">
+        <div class="col-lg-12 shadow-lg bg-white rounded">
+            <h2 class="text-center pb-2 mb-3"><?= $title; ?></h2>
+            <div class="container">
+                <div class="row">
+                    <?php if (empty($insurance->insurance_id)) { ?>
+                        <div class="col-md-12">
+                            <?= $this->form()->render($form); ?>
+                        </div>
+                    <?php } else { ?>
+                        <div class="col-md-5">
+                            <?= $this->form()->render($form); ?>
+                        </div>
+                        <div class="col-md-7">
+                            <?= $this->partial('partial/images.phtml', ['entity_name' => $insurance->getClassNameAbbreviation(), 'id' =>  $insurance->insurance_id, 'file_names' => $insurance->file_names, 'img_type' => 'view']); ?>
+                        </div>
+                    <?php }  ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?= $this->partial('partial/modal_img.phtml'); ?>
+<?= $this->partial('partial/confirm_modal_form.phtml'); ?>
+
+<?= $this->inlineScript()->captureStart();
+echo <<<JS
+        $(document).ready(function(){
+            $('.js-chosen').chosen({
+                width: '100%',
+                no_results_text: 'Совпадений не найдено',
+            });
+        });
+JS;
+$this->inlineScript()->captureEnd(); ?>

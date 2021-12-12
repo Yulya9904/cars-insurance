@@ -1,0 +1,25 @@
+<?php
+$this->headTitle('Удалить страховку');
+$url = $this->url('insurance/delete', ['id' => $insurance->insurance_id]);
+?>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 shadow-lg p-3 mb-5 bg-white rounded text-center">
+            <h3 class="pt-2">Удалить страховку</h3>
+            <hr>
+            <h5 class="pb-2">
+                Вы дествительно хотите удалить страховку для автомобиля <?= $car->car_model ?> c гос.номером &laquo;<?= $car->state_number ?>&raquo; действующую
+                c <?= date('d.m.y', strtotime($insurance->insurance_start_date)) ?> по <?= date('d.m.y', strtotime($insurance->insurance_end_date)) ?>?
+            </h5>
+
+            <form action="<?= $url ?>" method="post">
+                <div class="form-group">
+                    <input type="hidden" name="garage_id" value="<?= (int) $insurance->insurance_id ?>" />
+                    <input type="submit" class="btn btn-danger" name="del" value="Да" />
+                    <input type="submit" class="btn btn-success" name="del" value="Нет" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

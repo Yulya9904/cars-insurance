@@ -1,0 +1,78 @@
+<?php
+$title = empty($car->car_id) ? 'Все страховки' : 'Страховки ТС модель &laquo;' . $car->car_model . '&raquo; с гос.номером ' . $car->state_number;
+$this->headTitle($title);
+?>
+<style>
+    .table td,
+    .table th {
+        padding: .15rem;
+    }
+
+    .table thead th {
+        border-bottom: 1px solid #7abaff;
+    }
+</style>
+<div class="container-fluid m-0 p-0">
+    <div class="row">
+        <div class="col text-center">
+            <h1><?= $title; ?></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="input-group justify-content-end">
+                <a class="btn btn-success mb-2 pull-right" href="<?= $this->url('insurance/change', ['id' => 0], ['query' => ['car_id' => $car->car_id]]) ?>">Добавить страховку</a>
+            </div>
+        </div>
+        <div class="col-12" style="overflow: auto;">
+            <table id="insurances" class="table table-bordered" style='font-size:14px;'>
+                <thead class="table-primary text-center">
+                    <tr>
+                        <?php if (empty($car->car_id)) { ?>
+                            <td>Район</td>
+                            <th>ТС</th>
+                        <?php } ?>
+                        <th>Страховая компания</th>
+                        <th>Дата начала действия</th>
+                        <th>Дата окончания действия</th>
+                        <th>Стоимость страховки, руб.</th>
+                        <th>Файлы</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->insurances as $stroka_id => $insurance) { ?>
+                        <tr>
+                            <?php if (empty($car->car_id)) { ?>
+                                <td><?= $insurance->district_name; ?></td>
+                                <td><?= $insurance->car_model . ' - ' . $insurance->state_number; ?></td>
+                            <?php } ?>
+                            <td><?= $insurance->insurer_name; ?></td>
+                            <td><?= empty($insurance->insurance_start_date) ? '' : date('d.m.y', strtotime($insurance->insurance_start_date)); ?></td>
+                            <td><?= empty($insurance->insurance_end_date) ? '' : date('d.m.y', strtotime($insurance->insurance_end_date)); ?></td>
+                            <td><?= $insurance->cost; ?></td>
+                            <td style="min-width:220px;">
+                                <?= $this->partial('partial/images.phtml', ['entity_name' => $insurance->getClassNameAbbreviation(), 'id' =>  $insurance->insurance_id, 'file_names' => $insurance->file_names, 'img_type' => 'table']); ?>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-right">
+                                    <a href="<?= $this->url('insurance/view',   ['id' => $insurance->insurance_id]) ?>" class="btn btn-info btn-sm mr-1">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <a href="<?= $this->url('insurance/change', ['id' => $insurance->insurance_id]) ?>" class="btn btn-warning btn-sm mr-1">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <a href="<?= $this->url('insurance/delete', ['id' => $insurance->insurance_id]) ?>" class="btn btn-danger btn-sm mr-1">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<?= $this->partial('partial/modal_img.phtml'); ?>
+<?= $this->partial('partial/confirm_modal_form.phtml'); ?>
